@@ -1,0 +1,276 @@
+From 2a2de4e704bb357dd55552af17e066836af85f44 Mon Sep 17 00:00:00 2001
+From: karada-ni-ap <aza_sub_add@yahoo.co.jp>
+Date: Sun, 19 Apr 2015 17:22:18 +0900
+Subject: [PATCH] =?UTF-8?q?=E3=83=86=E3=83=BC=E3=83=96=E3=83=AB=E3=81=AE=E6=A7?=
+ =?UTF-8?q?=8B=E6=88=90=E3=81=A8=E3=83=AC=E3=82=B7=E3=83=94=E3=82=92=E5=84=AA?=
+ =?UTF-8?q?=E5=85=88=E5=BA=A6=E9=A0=86=E3=81=AB=E3=82=BD=E3=83=BC=E3=83=88=E3?=
+ =?UTF-8?q?=81=99=E3=82=8B=E3=81=A8=E3=81=93=E3=82=8D=E3=81=BE=E3=81=A7?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ food.py        |   14 ++++++++++++++
+ food.pyc       |  Bin 0 -> 381 bytes
+ main.py        |   20 ++++++++++++++++++++
+ make_table.py  |   28 ++++++++++++++++++++++++++++
+ make_table.pyc |  Bin 0 -> 654 bytes
+ matching.py    |   32 ++++++++++++++++++++++++++++++++
+ matching.pyc   |  Bin 0 -> 681 bytes
+ reading.txt    |    3 +++
+ recipe.py      |   15 +++++++++++++++
+ recipe.pyc     |  Bin 0 -> 822 bytes
+ syokuzai.txt   |   11 +++++++++++
+ 11 files changed, 123 insertions(+)
+ create mode 100644 food.py
+ create mode 100644 food.pyc
+ create mode 100644 main.py
+ create mode 100644 make_table.py
+ create mode 100644 make_table.pyc
+ create mode 100644 matching.py
+ create mode 100644 matching.pyc
+ create mode 100644 noma.py~
+ create mode 100644 reading.txt
+ create mode 100644 recipe.py
+ create mode 100644 recipe.pyc
+ create mode 100644 syokuzai.txt
+
+diff --git a/food.py b/food.py
+new file mode 100644
+index 0000000..db611bf
+--- /dev/null
++++ b/food.py
+@@ -0,0 +1,14 @@
++# coding: UTF-8
++
++f_f = open("syokuzai.txt", "r") #food file
++f_l = f_f.readlines() #foods list
++
++nof = len(f_l) #the number of foods
++
++Foods = {} #food dictionary
++
++for i in range(nof):
++  ary = f_l[i].split(" ")
++  Foods.update({ary[0] : i})
++
++# hoge
+diff --git a/food.pyc b/food.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..69173a2aa3c3a810f0b5106c2b9a8f6ac48c7b6e
+GIT binary patch
+literal 381
+zcmYLFu};G<5PeS4(1s$0P8ADdr$z{g0U=;Oj4TyGii9c?U%+h|huD!?)_gKQz}c#V
+zWxu<7_wLSi{Ck$ISJ$s4jw@yR$j4d+0u*n7AwnTQ0-Fc}P{g1F6k`x5M$pWp*gt?y
+zKqF5+y<edidj*X#-%Oymj<p#m#pV>6n{hgWiZQ?8jQGCAn@X@+jQsGahlAPnKT<E<
+z-Z{ZU7x0p&0WS+LaS4NIsc|to)w*&MwjD`T>xS%+t%I$Ps>W2#&v-UQ+2D1u`J~WW
+zhuF5YcA-Xg2j@SeZ<TbkU=RObFF4G<%#QM%wyrJn4_R*eHm|tzvOTyl=kIn#^)=o5
+R`-NAXi)l2C(r6}T;t$72M<oCN
+
+literal 0
+HcmV?d00001
+
+diff --git a/main.py b/main.py
+new file mode 100644
+index 0000000..8748ce0
+--- /dev/null
++++ b/main.py
+@@ -0,0 +1,20 @@
++# coding: UTF-8
++
++from food import *
++from recipe import *
++from make_table import *
++from matching import *
++
++# インポートは
++# food.py → recipe.py → make_table.py → matching.py の順
++
++# debug
++for i in range(nor):
++  print Recipes[i].name
++  print Recipes[i].demand
++  
++user = [0, 20, 0, 0, 0, 0, 0, 10, 0, 0, 50]
++order = search(user, Recipes)
++print order
++
++#hoge
+diff --git a/make_table.py b/make_table.py
+new file mode 100644
+index 0000000..f7dbfbd
+--- /dev/null
++++ b/make_table.py
+@@ -0,0 +1,28 @@
++# coding: UTF-8
++
++from food import *
++from recipe import *
++
++r_f = open("reading.txt", "r") #recipe file
++r_l = r_f.readlines() #recipe list
++
++nor = len(r_l) #the number of recipes
++
++Recipes = [] #レシピのテーブル
++
++for i in range(nor):
++  Recipes += [recipe()]
++#【Memo】
++# Recipes = [recipes] * nor と宣言すると
++# 同じオブジェクトをnor個持つリストになってしまう
++
++for i in range(nor): # i = 0, 1, ... , nor-1
++  ary = r_l[i].split(" ") #単語ごとに区切られた配列
++  
++  Recipes[i].input_name(ary[0])
++  
++  bound = ( len(ary) - 1 ) / 2 #注目しているレシピに必要な食材の種類
++  for j in range(bound): # j = 0, 1, ... , bound-1
++    Recipes[i].input_food( Foods[ ary[2*j+1] ], int(ary[2*j+2]) )
++
++#hoge
+diff --git a/make_table.pyc b/make_table.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..1edbf7c03f10b9ea8dfc0b96d2ec413e38ef9108
+GIT binary patch
+literal 654
+zcmYjPL5|Zf6n%CkO(&C?0_gx{1rm#j#dN`f%?PnTELh9}233lLsx<yn+)11?aiq?=
+z2jB!;f-`U<4glYt3Tipe_Vau1+g5_#r}59?^_K$sHstXge_bK~#a*BTuJ<#6Ym!jh
+z1MDQS02E+-gdLEDpaCevP9Tf0VrGc#OVBYWa^(B3kCDZoAxJpGO5hDkHdmN$e;mrb
+zdl|>Yn5<8rIG!UD?{w5DD1izwVOqGFi4&*+o~j7v*%`JUecai7)k|cff8Gb6hu$86
+zMi{f{$z(#04ylMK&g1Ke%`eP1J?3hN&(mXm75#_XlwStc!K?0sv87yTv%0Wb>)F=h
+zbIn`OPNpTp)ih<aM+`T0t?Ym&Efu;U&(#eX8#r!pV_hkiT53bxo-O@Y?p3C4ZN#ci
+zKB2RrbL3`4zP9%3t|_(kuDrdoF)Orbdb==rMP9J1d!xKzeX#9M=kh-AG4HEuW2a2u
+zKXfm6Ir~;uG^=!Hn_{-ii`%}LRrxI~Y`!e%qPer~Z@R2%)tB_vU9Nk^5Q|ujL?RP8
+Qkf|7lsYvCy9E()^1)xQJ3jhEB
+
+literal 0
+HcmV?d00001
+
+diff --git a/matching.py b/matching.py
+new file mode 100644
+index 0000000..e481773
+--- /dev/null
++++ b/matching.py
+@@ -0,0 +1,32 @@
++# coding: UTF-8
++
++from make_table import *
++
++def search(user, Recipes):
++  #引数userはユーザーが消費したい食材のリスト
++
++  compare = [0] * nor #各レシピの優先度を格納するリスト
++  for i in range(nor):
++    for j in range(nof):
++      if Recipes[i].demand[j] <= user[j]: #【ToDo】何人前作るのかにも対応させる
++        compare[i] += 1
++  
++  #【debug】compareはうまく入ってる
++  
++  order = [-1] * nor #優先度順にレシピのindexを並べたリスト
++  maxi = -1
++  i = 0 #現在注目している順位
++  
++  while True:
++    maxi = max(compare) #優先度の最大値
++    if maxi == 0:
++      break
++    
++    index = compare.index(maxi) #最大値が格納されているindex
++    compare[index] = 0 # 0に更新
++    order[i] = index # i番目に優先度が高いレシピをorderのi番目に格納
++    i += 1
++  
++  return order
++
++#hoge
+diff --git a/matching.pyc b/matching.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..f54faf81bbb9a36e118d6f645ac647a2215dadaf
+GIT binary patch
+literal 681
+zcma)3O^Xvj5PjV}o2<dO2L*|H5IhaSnuCIuu=sTo7Rf3>L1cEOO(w~Fq^AQBCZ}D0
+zi$7^E{tJJAzUo==YWGxiO;x{oHE+zX;oxQV^h1i9rFp)fHTUT<J_>8#eWq~*d{W2^
+z&f|!+{5Myu7<qAzQ$ZfmdbHQH<|iHDa|I9F+iUDT%3Z!(D!lpp7JGx;tB}%N>KXPC
+zT7}kNv@~cVj9P?arQlA`YAKOv#Ce{Z$>s!nW}63?ajw5a2QuWoC)~nt4j;i?!ygEq
+z)GW23y3%kz@UA3<#xi83+!v%!^)aEf#2H2gLduSt@0c;!$#9nQE0K!?og#fk-q4km
+zBPHOHa&B)jU%jZ4*&-=3PDNqewyPD%F5J$`%<f{*G1Rw>bzWLdZJO7%32|B#b>eK$
+zJr8~vu$9YrTiUW)J{4F@>s<4Y(Rfi6c3k9*uha2GlCHM(xJZ1u$jkYY`dgT;v589;
+zGI{ez&}OLaav!VXXsCLsr*Em-+>t&~1MWNeES6vI2XsZUvR{01v9{AAzW!qm(SMB~
+SpFSz7Y`eCnB4Z=X2l@}kwSlz&
+
+literal 0
+HcmV?d00001
+
+diff --git a/noma.py~ b/noma.py~
+new file mode 100644
+index 0000000..e69de29
+diff --git a/reading.txt b/reading.txt
+new file mode 100644
+index 0000000..e79ca6a
+--- /dev/null
++++ b/reading.txt
+@@ -0,0 +1,3 @@
++肉じゃが TAMAGO 10 JAGAIMO 20
++野菜いため NIRA 50 TAMANEGI 60
++おひたし HOURENSO 40 NINJIN 60
+diff --git a/recipe.py b/recipe.py
+new file mode 100644
+index 0000000..5e47f7e
+--- /dev/null
++++ b/recipe.py
+@@ -0,0 +1,15 @@
++# coding: UTF-8
++
++from food import *
++
++class recipe:
++	def __init__(self):
++		self.demand = [0] * (nof)
++	
++	def input_name(self, name):
++	  self.name = name
++
++	def input_food(self, food, amount):
++	  self.demand[food] = amount
++
++# hoge
+diff --git a/recipe.pyc b/recipe.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..e63c49faf22e8d59e40fef1fe8ae301a174c0194
+GIT binary patch
+literal 822
+zcmbV}Jx{|x42FG43vERQL{|pH5;2g0wL%E?4i^xj%PHhi2s9t!E(20G_{aPJ@awd6
+zL?wzH$LD+Ru`m1@kB;sy?lM|GA%Cyf+zC6&uc9T<tqsWb$%gbv^g;A6S7dvXM0;FS
+zeDf12jy&9%NAfMtiYEV+#lkh4J7t#>VLw4^&caH9koXW}dZd#G92s`O0=64AH(|%+
+zPl`OzWJP2|Cy7uoE7*~Q9^0#WAt*L4)5>;$J<hv)xrn3`&K<LhpX)M@%fk64iyzbM
+zwQb_AgY)Ly54ggZqAI*G=*{6YQW-uQ6TC4eR*JwS!%O7Q+4krvEpq|X0MQWJiDbkZ
+zimGY7fzpuwHY{j(W5ROCiB$lW7lE2u;`_ohJ06W{8MCl>04?g;%E;2PZY%#!G^iY~
+z+8QnDbG)7*sEzSx!<e$R?UH{r3iLi47PhBK^!NQ}GzATZdG4uUI1Fc<3T{Ua;83%(
+PvQSSu&P&WoS{emE5R;CI
+
+literal 0
+HcmV?d00001
+
+diff --git a/syokuzai.txt b/syokuzai.txt
+new file mode 100644
+index 0000000..56f7c64
+--- /dev/null
++++ b/syokuzai.txt
+@@ -0,0 +1,11 @@
++NINJIN /
++JAGAIMO /
++TAMANEGI /
++BUTANIKU /
++GYUNIKU /
++TORINIKU /
++MOYASHI /
++TAMAGO /
++HOURENSO /
++HAKUSAI /
++NIRA /
+-- 
+1.7.10.4
+

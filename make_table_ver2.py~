@@ -26,11 +26,13 @@ for i in range(nor): # i = 0, 1, ... , nor-1
   Recipes[i].input_time(ary1[1])
   Recipes[i].input_cate(ary1[3])
   
-  dish = int(ary1[2])
-  if dish >= 1 and dish <= 10:
+  """
+  if ary1[2] <=  and ary1[2] <= :
+    dish = int(ary1[2])
     Recipes[i].input_dish(ary1[2])
   else:
     Recipes[i].delete
+  """
   
   ary2 = ue_lines[2*i+1].split(" ")
   Recipes[i].input_url(ary2[0])

@@ -1,0 +1,11 @@
+{% extends "three/base.html" %}
+{% block title %}
+    タイトル
+{% endblock %}
+{% block content %}
+    <form action="/users/" method="post">{% csrf_token %}
+        {{ form.as_p }}
+    <input type="submit" value="ユーザを登録する" />
+    </form>
+{% endblock %}
+

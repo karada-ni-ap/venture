@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load url from future %}
+{% block content %}
+    <h3>{{username}}を登録しました。</h3>
+    下のボタンを押してログインしてください。
+    <form action="/venture/new_login/" method="post">
+    {% csrf_token %}
+        {{ form.as_p }}
+    <input type="submit" value="ログインする" />
+    </form>
+{% endblock %}
